@@ -1,5 +1,5 @@
 {
-    "name": "bican/roles",
+    "name": "saritasa/roles",
     "description": "Powerful package for handling roles and permissions in Laravel 5.",
     "keywords": ["roles", "permissions", "acl", "auth", "laravel", "illuminate"],
     "license": "MIT",
@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=5.5.9",
-        "illuminate/support": "~5.0"
+        "illuminate/support": ">=5.0"
     },
     "autoload": {
         "psr-0": {

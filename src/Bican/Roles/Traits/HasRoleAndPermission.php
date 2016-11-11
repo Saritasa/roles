@@ -49,7 +49,7 @@ trait HasRoleAndPermission
      * @param bool $all
      * @return bool
      */
-    public function is($role, $all = false)
+    public function isRole($role, $all = false)
     {
         if ($this->isPretendEnabled()) {
             return $this->pretend('is');
@@ -100,9 +100,12 @@ trait HasRoleAndPermission
      */
     public function hasRole($role)
     {
-        return $this->getRoles()->contains(function ($key, $value) use ($role) {
-            return $role == $value->id || Str::is($role, $value->slug);
-        });
+        foreach ($this->getRoles() AS $userRole) {
+            if ($role == $userRole->id || Str::is($role, $userRole->slug)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -248,9 +251,12 @@ trait HasRoleAndPermission
      */
     public function hasPermission($permission)
     {
-        return $this->getPermissions()->contains(function ($key, $value) use ($permission) {
-            return $permission == $value->id || Str::is($permission, $value->slug);
-        });
+        foreach ($this->getPermissions() AS $userPermission) {
+            if ($permission == $userPermission->id || Str::is($permission, $userPermission->slug)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -327,7 +333,7 @@ trait HasRoleAndPermission
     public function detachAllPermissions()
     {
         $this->permissions = null;
-        
+
         return $this->userPermissions()->detach();
     }
 
@@ -385,7 +391,7 @@ trait HasRoleAndPermission
     public function __call($method, $parameters)
     {
         if (starts_with($method, 'is')) {
-            return $this->is(snake_case(substr($method, 2), config('roles.separator')));
+            return $this->isRole(snake_case(substr($method, 2), config('roles.separator')));
         } elseif (starts_with($method, 'can')) {
             return $this->can(snake_case(substr($method, 3), config('roles.separator')));
         } elseif (starts_with($method, 'allowed')) {
